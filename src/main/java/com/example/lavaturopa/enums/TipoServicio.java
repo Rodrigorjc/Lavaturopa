@@ -1,0 +1,5 @@
+package com.example.lavaturopa.enums;
+
+public enum TipoServicio {
+    LAVADO, SECADO, PLANCHADO, LAVADOYSECADO, LAVADOYPLANCHADO, SECADOYPLANCHADO, LAVADOSECADOYPLANCHADO
+}
