@@ -22,6 +22,7 @@ public class Pagos {
     private Float total;
 
 
+
     @Column(name = "estdo_pago", nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private EstadoPago estadoPago;
