@@ -23,11 +23,11 @@ public class PrendasPedidoCatalogo {
     private Pedidos pedidos;
 
     @ManyToOne
-    @JoinColumn(name = "id_pedidos", nullable = false)
+    @JoinColumn(name = "id_prendas", nullable = false)
     private Prendas prendas;
 
     @ManyToOne
-    @JoinColumn(name = "id_pedidos", nullable = false)
+    @JoinColumn(name = "id_catalogo", nullable = false)
     private Catalogo catalogo;
 
     @Column(name = "precios", nullable = false)
