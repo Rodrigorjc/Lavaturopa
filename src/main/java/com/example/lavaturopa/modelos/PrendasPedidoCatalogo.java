@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "catalogo", schema = "lavaturopa", catalog = "postgres")
+@Table(name = "prendas_pedido_catalogo", schema = "lavaturopa", catalog = "postgres")
 @Getter
 @Setter
 @ToString
@@ -19,7 +19,7 @@ public class PrendasPedidoCatalogo {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "id_pedidos", nullable = false)
+    @JoinColumn(name = "id_pedido", nullable = false)
     private Pedidos pedidos;
 
     @ManyToOne
@@ -30,6 +30,6 @@ public class PrendasPedidoCatalogo {
     @JoinColumn(name = "id_catalogo", nullable = false)
     private Catalogo catalogo;
 
-    @Column(name = "precios", nullable = false)
+    @Column(name = "precio", nullable = false)
     private Float precio;
 }
