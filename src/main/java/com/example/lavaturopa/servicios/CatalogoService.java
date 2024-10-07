@@ -2,7 +2,6 @@ package com.example.lavaturopa.servicios;
 
 
 import com.example.lavaturopa.modelos.Catalogo;
-import com.example.lavaturopa.modelos.Cliente;
 import com.example.lavaturopa.repositorios.CatalogoRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,7 @@ public class CatalogoService {
     private CatalogoRepositorio catalogoRepositorio;
 
     /**
-     * Este metodo obtiene todos los clientes
+     * Este metodo obtiene todos los registo de la tabla catalogo
      * @return
      */
     public List<Catalogo> getall(){
@@ -25,7 +24,7 @@ public class CatalogoService {
     }
 
     /**
-     * Este metodo busca un cliente por su id
+     * Este metodo busca un catalogo por su id
      * @param id
      * @return
      */
@@ -35,7 +34,7 @@ public class CatalogoService {
     }
 
     /**
-     * Este metedo guarda un cliente nuevo
+     * Este metedo guarda un catalogo nuevo
      * @param catalogo
      * @return
      */
@@ -44,7 +43,7 @@ public class CatalogoService {
     }
 
     /**
-     * Este metodo guarda la edicion de un cliente ya existente
+     * Este metodo guarda la edicion de un catalogo ya existente
      * @param catalogo
      * @return
      */
@@ -53,7 +52,7 @@ public class CatalogoService {
     }
 
     /**
-     * Este metodo elimina a un cliente por su id
+     * Este metodo elimina a un catalogo por su id
      * @param id
      */
     public void eliminar(Integer id){
