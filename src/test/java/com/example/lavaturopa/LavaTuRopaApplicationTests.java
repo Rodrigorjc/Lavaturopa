@@ -2,6 +2,7 @@ package com.example.lavaturopa;
 
 import com.example.lavaturopa.modelos.*;
 import com.example.lavaturopa.repositorios.*;
+import com.example.lavaturopa.servicios.ClienteService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +27,19 @@ class LavaTuRopaApplicationTests {
 
     @Autowired
     private CatalogoRepositorio catalogoRepositorio;
+
+    @Autowired
+    private ClienteService clienteServicio;
+
+
+    @Test
+    void testFindAllClientesbyDNI() {
+        List<Cliente> clientes = clienteServicio.getClientepoDNI("12345678A");
+        for (Cliente cliente : clientes) {
+            System.out.println(cliente);
+        }
+    }
+
 
     @Test
     void testFindAllClientes() {

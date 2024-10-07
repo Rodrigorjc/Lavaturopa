@@ -9,4 +9,9 @@ import java.util.List;
 
 @Repository
 public interface ClienteRepositorio extends JpaRepository<Cliente, Integer> {
+
+    //JPA interfaz
+    List<Cliente> findAllByDniEquals(String dni);
+
+
 }
