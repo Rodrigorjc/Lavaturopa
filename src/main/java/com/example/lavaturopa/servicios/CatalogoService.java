@@ -2,6 +2,7 @@ package com.example.lavaturopa.servicios;
 
 
 import com.example.lavaturopa.modelos.Catalogo;
+import com.example.lavaturopa.modelos.Cliente;
 import com.example.lavaturopa.repositorios.CatalogoRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -55,8 +56,22 @@ public class CatalogoService {
      * Este metodo elimina a un catalogo por su id
      * @param id
      */
-    public void eliminar(Integer id){
-        catalogoRepositorio.deleteById(id);
+    public String eliminar(Integer id){
+        String mensaje = "";
+        Catalogo catalogo = catalogoById(id);
+        if (catalogo == null) {
+            mensaje = "El catalogo con el id indicado no existe";
+        }
+        try {
+            catalogoRepositorio.deleteById(id);
+            catalogo = catalogoById(id);
+            if (catalogo != null){
+                mensaje = "No se ha podido eliminar el clinete";
+            }
+            mensaje = "Catalogo eliminado con existo";
+        } catch (Exception e){
+            mensaje = "No se ha podido eliminar el clinete";
+        }
+        return mensaje;
     }
-
 }

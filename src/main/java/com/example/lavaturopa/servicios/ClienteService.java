@@ -1,11 +1,14 @@
 package com.example.lavaturopa.servicios;
 
 
+import com.example.lavaturopa.dto.ClienteDTO;
+import com.example.lavaturopa.dto.ClienteNewDTO;
 import com.example.lavaturopa.modelos.Cliente;
 import com.example.lavaturopa.repositorios.ClienteRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,9 +32,17 @@ public class ClienteService {
      * Este metodo obtiene todos los clientes
      * @return
      */
-    public List<Cliente> getall(){
+    public List<ClienteDTO> getall(){
         List<Cliente> clientes = clienteRepositorio.findAll();
-        return clientes;
+        List<ClienteDTO> clienteDTOS = new ArrayList<>();
+        for (Cliente c : clientes){
+            ClienteDTO dto = new ClienteDTO();
+            dto.setNombre(c.getNombre());
+            dto.setApellidos(c.getApellidos());
+            dto.setTelefono(c.getTelefono());
+            clienteDTOS.add(dto);
+        }
+        return clienteDTOS;
     }
 
     /**
@@ -39,9 +50,13 @@ public class ClienteService {
      * @param id
      * @return
      */
-    public Cliente clienteById(Integer id){
+    public ClienteDTO clienteById(Integer id){
         Cliente cliente = clienteRepositorio.findById(id).orElse(null);
-        return cliente;
+        ClienteDTO clienteDTO = new ClienteDTO();
+        clienteDTO.setNombre(cliente.getNombre());
+        clienteDTO.setApellidos(cliente.getApellidos());
+        clienteDTO.setTelefono(cliente.getTelefono());
+        return clienteDTO;
     }
 
     /**
@@ -49,7 +64,10 @@ public class ClienteService {
      * @param cliente
      * @return
      */
-    public Cliente saveCliente(Cliente cliente){
+    public Cliente saveCliente(ClienteNewDTO clienteNewDTO){
+        Cliente cliente = new Cliente();
+        cliente.setNombre(clienteNewDTO.getNombre());
+        cliente.setApellidos(clienteNewDTO.getApellidos());
         return clienteRepositorio.save(cliente);
     }
 
@@ -66,7 +84,21 @@ public class ClienteService {
      * Este metodo elimina a un cliente por su id
      * @param id
      */
-    public void eliminar(Integer id){
-        clienteRepositorio.deleteById(id);
+    public String eliminar(Integer id){
+        String mensaje = "";
+        Cliente cliente = clienteRepositorio.findById(id).orElse(null);
+        if (cliente == null) {
+            mensaje = "El cliente con el id indicado no existe";
+        }
+        try {
+            clienteRepositorio.deleteById(id);
+            cliente = clienteRepositorio.findById(id).orElse(null);
+            if (cliente != null){
+                mensaje = "No se ha podido eliminar el clinete";
+            }
+        } catch (Exception e){
+            mensaje = "No se ha podido eliminar el clinete";
+        }
+        return mensaje;
     }
 }
