@@ -1,6 +1,7 @@
 package com.example.lavaturopa.controlers;
 
 import com.example.lavaturopa.dto.ClienteDTO;
+import com.example.lavaturopa.dto.ClienteEditDTO;
 import com.example.lavaturopa.dto.ClienteNewDTO;
 import com.example.lavaturopa.modelos.Cliente;
 import com.example.lavaturopa.servicios.ClienteService;
@@ -20,8 +21,7 @@ public class ClienteControler {
 
     @GetMapping("/listar")
     public List<ClienteDTO> getAllClientes(){
-        List<ClienteDTO> clientes = clienteService.getall();
-        return clientes;
+        return clienteService.getall();
     }
 
 
@@ -32,14 +32,17 @@ public class ClienteControler {
 
     @GetMapping("/get/{id}")
     public ClienteDTO getByIdPath(@PathVariable Integer id){
-        ClienteDTO cliente = clienteService.clienteById(id);
-        return cliente;
+        return clienteService.clienteById(id);
     }
 
     @PostMapping()
-    public ClienteNewDTO guardar(@RequestBody Cliente cliente){
-        ClienteNewDTO clienteguardado = clienteService.saveCliente(cliente);
-        return clienteguardado;
+    public Cliente guardar(@RequestBody ClienteNewDTO cliente){
+        return clienteService.saveCliente(cliente);
+    }
+
+    @PutMapping()
+    public Cliente edit(@RequestBody ClienteEditDTO clienteEditDTO, @RequestParam Integer id){
+        return clienteService.editCliente(clienteEditDTO, id);
     }
 
     @DeleteMapping()

@@ -1,6 +1,7 @@
 package com.example.lavaturopa.controlers;
 
 
+import com.example.lavaturopa.dto.CatalogoDTO;
 import com.example.lavaturopa.dto.ClienteDTO;
 import com.example.lavaturopa.modelos.Catalogo;
 import com.example.lavaturopa.modelos.Cliente;
@@ -18,27 +19,29 @@ public class CatalogoControler {
     private CatalogoService catalogoService;
 
     @GetMapping("/listar")
-    public List<Catalogo> getAllClientes(){
-        List<Catalogo> catalogos = catalogoService.getall();
-        return catalogos;
+    public List<CatalogoDTO> getAllClientes(){
+        return catalogoService.getall();
     }
 
 
     @GetMapping()
-    public Catalogo getById(@RequestParam Integer id){
+    public CatalogoDTO getById(@RequestParam Integer id){
         return catalogoService.catalogoById(id);
     }
 
     @GetMapping("/get/{id}")
-    public Catalogo getByIdPath(@PathVariable Integer id){
-        Catalogo catalogo = catalogoService.catalogoById(id);
-        return catalogo;
+    public CatalogoDTO getByIdPath(@PathVariable Integer id){
+        return catalogoService.catalogoById(id);
     }
 
     @PostMapping()
-    public Catalogo guardar(@RequestBody Catalogo catalogo){
-        Catalogo catalogoguardar = catalogoService.saveCatalogo(catalogo);
-        return catalogoguardar;
+    public Catalogo guardar(@RequestBody CatalogoDTO catalogoDTO){
+        return catalogoService.saveCatalogo(catalogoDTO);
+    }
+
+    @PutMapping()
+    public Catalogo editar(@RequestBody CatalogoDTO catalogoDTO, @RequestParam Integer id){
+        return catalogoService.editCatalogo(catalogoDTO, id);
     }
 
     @DeleteMapping()

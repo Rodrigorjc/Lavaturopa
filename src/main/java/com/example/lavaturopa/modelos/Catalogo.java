@@ -22,12 +22,12 @@ public class Catalogo {
     //Enumerado de tipo_servicio
     @Column(name = "tipo_servicio", nullable = false)
     @Enumerated(EnumType.ORDINAL)
-    private TipoServicio tipo_servicio;
+    private TipoServicio tipoServicio;
 
     //Enumerado de tipo_prenda
     @Column(name = "tipo_prenda", nullable = false)
     @Enumerated(EnumType.ORDINAL)
-    private TipoPrenda tipo_prenda;
+    private TipoPrenda tipoPrenda;
 
     @Column(name = "precio", nullable = false)
     private Float precio;

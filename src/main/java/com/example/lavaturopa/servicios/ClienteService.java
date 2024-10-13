@@ -2,6 +2,7 @@ package com.example.lavaturopa.servicios;
 
 
 import com.example.lavaturopa.dto.ClienteDTO;
+import com.example.lavaturopa.dto.ClienteEditDTO;
 import com.example.lavaturopa.dto.ClienteNewDTO;
 import com.example.lavaturopa.modelos.Cliente;
 import com.example.lavaturopa.repositorios.ClienteRepositorio;
@@ -61,23 +62,32 @@ public class ClienteService {
 
     /**
      * Este metedo guarda un cliente nuevo
-     * @param cliente
+     * @param clienteNewDTO
      * @return
      */
     public Cliente saveCliente(ClienteNewDTO clienteNewDTO){
         Cliente cliente = new Cliente();
         cliente.setNombre(clienteNewDTO.getNombre());
         cliente.setApellidos(clienteNewDTO.getApellidos());
+        cliente.setTelefono(clienteNewDTO.getTelefono());
+        cliente.setDni(clienteNewDTO.getDni());
+        cliente.setDireccion(clienteNewDTO.getDireccion());
         return clienteRepositorio.save(cliente);
     }
 
     /**
-     * Este metodo guarda la edicion de un cliente ya existente
+     * Edita un cliente existente
      * @param cliente
+     * @param id
      * @return
      */
-    public Cliente editCliente(Cliente cliente){
-        return clienteRepositorio.save(cliente);
+    public Cliente editCliente(ClienteEditDTO cliente, Integer id){
+        Cliente clientedit = clienteRepositorio.getReferenceById(id);
+        clientedit.setNombre(cliente.getNombre());
+        clientedit.setApellidos(cliente.getApellidos());
+        clientedit.setDireccion(cliente.getDireccion());
+        clientedit.setTelefono(cliente.getTelefono());
+        return clienteRepositorio.save(clientedit);
     }
 
     /**

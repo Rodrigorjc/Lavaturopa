@@ -1,12 +1,13 @@
 package com.example.lavaturopa.servicios;
 
 
+import com.example.lavaturopa.dto.CatalogoDTO;
 import com.example.lavaturopa.modelos.Catalogo;
-import com.example.lavaturopa.modelos.Cliente;
 import com.example.lavaturopa.repositorios.CatalogoRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,9 +20,17 @@ public class CatalogoService {
      * Este metodo obtiene todos los registo de la tabla catalogo
      * @return
      */
-    public List<Catalogo> getall(){
+    public List<CatalogoDTO> getall(){
         List<Catalogo> catalogos = catalogoRepositorio.findAll();
-        return catalogos;
+        List<CatalogoDTO> catalogoDTOS = new ArrayList<>();
+        for(Catalogo c : catalogos){
+            CatalogoDTO catalogoDTO = new CatalogoDTO();
+            catalogoDTO.setTipoPrenda(c.getTipoPrenda());
+            catalogoDTO.setTipoServicio(c.getTipoServicio());
+            catalogoDTO.setPrecio(c.getPrecio());
+            catalogoDTOS.add(catalogoDTO);
+        }
+        return catalogoDTOS;
     }
 
     /**
@@ -29,26 +38,39 @@ public class CatalogoService {
      * @param id
      * @return
      */
-    public Catalogo catalogoById(Integer id){
+    public CatalogoDTO catalogoById(Integer id){
         Catalogo catalogo = catalogoRepositorio.findById(id).orElse(null);
-        return  catalogo;
+        CatalogoDTO catalogoDTO = new CatalogoDTO();
+        catalogoDTO.setPrecio(catalogo.getPrecio());
+        catalogoDTO.setTipoPrenda(catalogo.getTipoPrenda());
+        catalogoDTO.setTipoServicio(catalogo.getTipoServicio());
+        return  catalogoDTO;
     }
 
     /**
      * Este metedo guarda un catalogo nuevo
-     * @param catalogo
+     * @param catalogoDTO
      * @return
      */
-    public Catalogo saveCatalogo(Catalogo catalogo){
+    public Catalogo saveCatalogo(CatalogoDTO catalogoDTO){
+        Catalogo catalogo = new Catalogo();
+        catalogo.setPrecio(catalogoDTO.getPrecio());
+        catalogo.setTipoPrenda(catalogoDTO.getTipoPrenda());
+        catalogo.setTipoServicio(catalogoDTO.getTipoServicio());
         return catalogoRepositorio.save(catalogo);
     }
 
     /**
      * Este metodo guarda la edicion de un catalogo ya existente
-     * @param catalogo
+     * @param catalogoDTO
+     * @param id
      * @return
      */
-    public Catalogo editCatalogo(Catalogo catalogo){
+    public Catalogo editCatalogo(CatalogoDTO catalogoDTO, Integer id){
+        Catalogo catalogo = catalogoRepositorio.findById(id).orElse(null);
+        catalogo.setPrecio(catalogoDTO.getPrecio());
+        catalogo.setTipoPrenda(catalogoDTO.getTipoPrenda());
+        catalogo.setTipoServicio(catalogoDTO.getTipoServicio());
         return catalogoRepositorio.save(catalogo);
     }
 
@@ -58,13 +80,13 @@ public class CatalogoService {
      */
     public String eliminar(Integer id){
         String mensaje = "";
-        Catalogo catalogo = catalogoById(id);
+        Catalogo catalogo = catalogoRepositorio.findById(id).orElse(null);
         if (catalogo == null) {
             mensaje = "El catalogo con el id indicado no existe";
         }
         try {
             catalogoRepositorio.deleteById(id);
-            catalogo = catalogoById(id);
+            catalogoRepositorio.findById(id);
             if (catalogo != null){
                 mensaje = "No se ha podido eliminar el clinete";
             }
