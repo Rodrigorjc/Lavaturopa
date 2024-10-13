@@ -2,6 +2,7 @@ package com.example.lavaturopa.controlers;
 
 
 import com.example.lavaturopa.dto.ClienteDTO;
+import com.example.lavaturopa.dto.PrendaDTO;
 import com.example.lavaturopa.modelos.Cliente;
 import com.example.lavaturopa.modelos.Prendas;
 import com.example.lavaturopa.servicios.PrendasService;
@@ -16,35 +17,37 @@ import java.util.List;
 public class PrendasControler {
 
     private PrendasService prendasService;
-//
-//
-//    @GetMapping("/listar")
-//    public List<Prendas> getAllClientes(){
-//        List<Prendas> prendas = prendasService.getall();
-//        return prendas;
-//    }
-//
-//
-//    @GetMapping()
-//    public Cliente getById(@RequestParam Integer id){
-//        return clienteService.clienteById(id);
-//    }
-//
-//    @GetMapping("/get/{id}")
-//    public Cliente getByIdPath(@PathVariable Integer id){
-//        Cliente cliente = clienteService.clienteById(id);
-//        return cliente;
-//    }
-//
-//    @PostMapping()
-//    public Cliente guardar(@RequestBody Cliente cliente){
-//        Cliente clienteguardado = clienteService.saveCliente(cliente);
-//        return clienteguardado;
-//    }
-//
-//    @DeleteMapping()
-//    public String eliminar(@RequestParam Integer id){
-//        return clienteService.eliminar(id);
-//    }
+
+
+    @GetMapping("/listar")
+    public List<PrendaDTO> getAllClientes(){
+        return prendasService.getall();
+    }
+
+
+    @GetMapping()
+    public PrendaDTO getById(@RequestParam Integer id){
+        return prendasService.getById(id);
+    }
+
+    @GetMapping("/get/{id}")
+    public PrendaDTO getByIdPath(@PathVariable Integer id){
+        return prendasService.getById(id);
+    }
+
+    @PostMapping()
+    public Prendas guardar(@RequestBody PrendaDTO prendaDTO){
+        return prendasService.save(prendaDTO);
+    }
+
+    @PutMapping()
+    public Prendas edit(@RequestBody PrendaDTO prendaDTO, @RequestParam Integer id){
+        return prendasService.edit(prendaDTO, id);
+    }
+
+    @DeleteMapping()
+    public String eliminar(@RequestParam Integer id){
+        return prendasService.eliminar(id);
+    }
 
 }

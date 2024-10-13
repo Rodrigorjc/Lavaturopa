@@ -48,4 +48,8 @@ public class PrendasPedidoCatalogoService {
     public void eliminarById(Integer id) {
         prendasPedidoCatalogoRepositorio.deleteById(id);
     }
+
+    public List<PrendasPedidoCatalogo> findByPedidoId(Integer pedidoId) {
+        return prendasPedidoCatalogoRepositorio.findByPedidosId(pedidoId);
+    }
 }

@@ -32,4 +32,7 @@ public class PrendasPedidoCatalogo {
 
     @Column(name = "precio", nullable = false)
     private Float precio;
+
+    @Column(name = "cantidad",nullable = false)
+    private Integer cantidad;
 }

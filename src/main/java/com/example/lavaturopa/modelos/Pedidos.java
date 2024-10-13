@@ -1,6 +1,7 @@
 package com.example.lavaturopa.modelos;
 
 import com.example.lavaturopa.enums.Estado;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,9 +11,9 @@ import java.time.LocalDate;
 @Table(name = "pedidos", schema = "lavaturopa", catalog = "postgres")
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"cliente"})
 @EqualsAndHashCode
 public class Pedidos {
 
@@ -31,7 +32,7 @@ public class Pedidos {
     @Column(name = "total",  nullable = false)
     private Float total;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente;
 }

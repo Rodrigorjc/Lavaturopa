@@ -106,6 +106,7 @@ public class ClienteService {
             if (cliente != null){
                 mensaje = "No se ha podido eliminar el clinete";
             }
+            mensaje = "Cliente eliminado con exito";
         } catch (Exception e){
             mensaje = "No se ha podido eliminar el clinete";
         }
