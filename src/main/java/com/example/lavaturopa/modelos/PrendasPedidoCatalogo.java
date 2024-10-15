@@ -18,7 +18,7 @@ public class PrendasPedidoCatalogo {
     @Column(name = "id")
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_pedido", nullable = false)
     private Pedidos pedidos;
 

@@ -4,6 +4,7 @@ package com.example.lavaturopa.servicios;
 import com.example.lavaturopa.dto.ClienteDTO;
 import com.example.lavaturopa.dto.ClienteEditDTO;
 import com.example.lavaturopa.dto.ClienteNewDTO;
+import com.example.lavaturopa.mappers.ClienteMapper;
 import com.example.lavaturopa.modelos.Cliente;
 import com.example.lavaturopa.repositorios.ClienteRepositorio;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ public class ClienteService {
 
 
     private ClienteRepositorio clienteRepositorio;
+    private ClienteMapper clienteMapper;
 
     /**
      * Este metdo busca a todos los clientes con un DNI en concreto
@@ -37,11 +39,12 @@ public class ClienteService {
         List<Cliente> clientes = clienteRepositorio.findAll();
         List<ClienteDTO> clienteDTOS = new ArrayList<>();
         for (Cliente c : clientes){
-            ClienteDTO dto = new ClienteDTO();
-            dto.setNombre(c.getNombre());
-            dto.setApellidos(c.getApellidos());
-            dto.setTelefono(c.getTelefono());
-            clienteDTOS.add(dto);
+//            ClienteDTO dto = new ClienteDTO();
+//            dto.setNombre(c.getNombre());
+//            dto.setApellidos(c.getApellidos());
+//            dto.setTelefono(c.getTelefono());
+//            clienteDTOS.add(dto);
+            clienteDTOS.add(clienteMapper.toDTO(c));
         }
         return clienteDTOS;
     }

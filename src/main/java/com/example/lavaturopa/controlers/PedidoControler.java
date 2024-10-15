@@ -31,7 +31,10 @@ public class PedidoControler {
     }
 
     @PostMapping()
-    public Pedidos guardar(@RequestBody PedidoCrearDTO pedidoDTO){
+    public PedidoCrearDTO guardar(@RequestBody PedidoCrearDTO pedidoDTO){
         return pedidosService.save(pedidoDTO);
     }
+
+    @DeleteMapping()
+    public void eliminar(@RequestParam Integer id){ pedidosService.deleteById(id);}
 }

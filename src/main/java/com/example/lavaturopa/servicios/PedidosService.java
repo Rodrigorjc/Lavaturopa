@@ -90,7 +90,7 @@ public class PedidosService {
      * @param pedidoDTO
      * @return
      */
-    public Pedidos save(PedidoCrearDTO pedidoDTO){
+    public PedidoCrearDTO save(PedidoCrearDTO pedidoDTO){
         Pedidos pedido = new Pedidos();
         pedido.setTotal(pedidoDTO.getTotal());
         pedido.setEstado(pedidoDTO.getEstado());
@@ -100,16 +100,19 @@ public class PedidosService {
         pedido.setFechaEntrega(fechaEntrega);
 
         pedido.setCliente(clienteRepositorio.getReferenceById(pedidoDTO.getIdCliente()));
+
+        Pedidos pedidoGuardado = pedidosRepositorio.save(pedido);
+
         for(LineaDTO l : pedidoDTO.getLinea()){
             PrendasPedidoCatalogo linea = new PrendasPedidoCatalogo();
             linea.setCantidad(l.getCantidad());
-            linea.setPedidos(pedidosRepositorio.getReferenceById(l.getIdPedido()));
+            linea.setPedidos(pedidoGuardado);
             linea.setPrecio(l.getPrecio());
             linea.setCatalogo(catalogoRepositorio.findById(l.getIdCatalogo()).orElse(null));
             linea.setPrendas(prendasRepositorio.getReferenceById(l.getIdPrenda()));
             prendasPedidoCatalogoService.guardar(linea);
         }
-        return pedidosRepositorio.save(pedido);
+        return pedidoDTO;
     }
 
     /**
