@@ -2,8 +2,12 @@ package com.example.lavaturopa.servicios;
 
 
 import com.example.lavaturopa.dto.CatalogoDTO;
+import com.example.lavaturopa.dto.MensajeDTO;
+import com.example.lavaturopa.enums.TipoPrenda;
+import com.example.lavaturopa.enums.TipoServicio;
 import com.example.lavaturopa.modelos.Catalogo;
 import com.example.lavaturopa.repositorios.CatalogoRepositorio;
+import com.example.lavaturopa.repositorios.PrendasPedidoCatalogoRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -96,4 +100,44 @@ public class CatalogoService {
         }
         return mensaje;
     }
+    public MensajeDTO eliminarCatalogo(Integer idCatalogo) {
+        MensajeDTO mensajeDTO = new MensajeDTO();
+        Catalogo catalogo = catalogoRepositorio.findById(idCatalogo).orElse(null);
+        if (catalogo == null) {
+            mensajeDTO.setMensaje("El catalogo con el id indicado no existe. ");
+        }
+        boolean existeRelacion = catalogoRepositorio.existsInPrendasPedidoCatalogoAndPedidoNotEntregado(idCatalogo);
+        if (existeRelacion) {
+            mensajeDTO.setMensaje("No se puede eliminar el catálogo porque está asociado a un pedido que no está en estado ENTREGADO.");
+            return  mensajeDTO;
+        } else {
+            try {
+                catalogoRepositorio.deleteById(idCatalogo);
+                mensajeDTO.setMensaje("Catalogo eliminado con existo.");
+                return mensajeDTO;
+            } catch ()
+        }
+
+    }
+
+
+
+    /**
+     * Este método consulta la disponibilidad de un servicio para un prenda
+     * @param tipoServicio
+     * @param tipoPrenda
+     * @return
+     */
+    public MensajeDTO disponibilidadServicio(TipoServicio tipoServicio, TipoPrenda tipoPrenda) {
+        MensajeDTO mensajeDTO = new MensajeDTO();
+        boolean exists = catalogoRepositorio.existsByTipoServicioAndTipoPrenda(tipoServicio, tipoPrenda);
+        if (exists) {
+            mensajeDTO.setMensaje("Si está disponible dicho servicio para la prenda seleccionada.");
+        } else {
+            mensajeDTO.setMensaje("No está disponible dicho servicio para la prenda seleccionada.");
+        }
+        return mensajeDTO;
+    }
+
+
 }

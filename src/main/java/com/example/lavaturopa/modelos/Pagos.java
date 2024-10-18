@@ -23,7 +23,7 @@ public class Pagos {
 
 
 
-    @Column(name = "estdo_pago", nullable = false)
+    @Column(name = "estado_pago", nullable = false)
     @Enumerated(EnumType.ORDINAL)
     private EstadoPago estadoPago;
 

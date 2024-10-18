@@ -2,14 +2,12 @@ package com.example.lavaturopa.servicios;
 
 
 import com.example.lavaturopa.dto.LineaDTO;
+import com.example.lavaturopa.dto.MensajeDTO;
 import com.example.lavaturopa.dto.PedidoCrearDTO;
 import com.example.lavaturopa.dto.PedidoDTO;
 import com.example.lavaturopa.modelos.Pedidos;
 import com.example.lavaturopa.modelos.PrendasPedidoCatalogo;
-import com.example.lavaturopa.repositorios.CatalogoRepositorio;
-import com.example.lavaturopa.repositorios.ClienteRepositorio;
-import com.example.lavaturopa.repositorios.PedidosRepositorio;
-import com.example.lavaturopa.repositorios.PrendasRepositorio;
+import com.example.lavaturopa.repositorios.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +24,7 @@ public class PedidosService {
     private ClienteRepositorio clienteRepositorio;
     private CatalogoRepositorio catalogoRepositorio;
     private PrendasRepositorio prendasRepositorio;
+    private  PrendasPedidoCatalogoRepositorio prendasPedidoCatalogoRepositorio;
     private PrendasPedidoCatalogoService prendasPedidoCatalogoService;
 
     /**
@@ -123,4 +122,16 @@ public class PedidosService {
         pedidosRepositorio.deleteById(id);
     }
 
+
+    /**
+     * Este metodo te da el total de un pedido
+     * @param idPedido
+     * @return
+     */
+    public MensajeDTO gastoTotal(Integer idPedido){
+        MensajeDTO mensajeDTO = new MensajeDTO();
+        Float total = prendasPedidoCatalogoRepositorio.findTotalPriceByPedidoId(idPedido);
+        mensajeDTO.setMensaje("El precio total de su pedido es: "+ total + " euros.");
+        return mensajeDTO;
+    }
 }

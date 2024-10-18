@@ -3,6 +3,9 @@ package com.example.lavaturopa.controlers;
 
 import com.example.lavaturopa.dto.CatalogoDTO;
 import com.example.lavaturopa.dto.ClienteDTO;
+import com.example.lavaturopa.dto.MensajeDTO;
+import com.example.lavaturopa.enums.TipoPrenda;
+import com.example.lavaturopa.enums.TipoServicio;
 import com.example.lavaturopa.modelos.Catalogo;
 import com.example.lavaturopa.modelos.Cliente;
 import com.example.lavaturopa.servicios.CatalogoService;
@@ -48,4 +51,7 @@ public class CatalogoControler {
     public String eliminar(@RequestParam Integer id){
         return catalogoService.eliminar(id);
     }
+
+    @GetMapping("/servicioDisponible")
+    public MensajeDTO consultarDisponibilidad(@RequestParam TipoServicio tipoServicio, @RequestParam TipoPrenda tipoPrenda){ return catalogoService.disponibilidadServicio(tipoServicio, tipoPrenda);}
 }

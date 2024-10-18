@@ -1,9 +1,6 @@
 package com.example.lavaturopa.controlers;
 
-import com.example.lavaturopa.dto.ClienteDTO;
-import com.example.lavaturopa.dto.ClienteNewDTO;
-import com.example.lavaturopa.dto.PedidoCrearDTO;
-import com.example.lavaturopa.dto.PedidoDTO;
+import com.example.lavaturopa.dto.*;
 import com.example.lavaturopa.modelos.Cliente;
 import com.example.lavaturopa.modelos.Pedidos;
 import com.example.lavaturopa.servicios.ClienteService;
@@ -37,4 +34,7 @@ public class PedidoControler {
 
     @DeleteMapping()
     public void eliminar(@RequestParam Integer id){ pedidosService.deleteById(id);}
+
+    @GetMapping("/gasto/total")
+    public MensajeDTO gastoTotal(@RequestParam Integer idPedido) {return pedidosService.gastoTotal(idPedido); }
 }
