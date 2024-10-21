@@ -116,7 +116,6 @@ public class CatalogoService {
     }
 
 
-
     /**
      * Este método consulta la disponibilidad de un servicio para un prenda
      * @param tipoServicio
