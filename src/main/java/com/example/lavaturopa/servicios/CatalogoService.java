@@ -3,14 +3,17 @@ package com.example.lavaturopa.servicios;
 
 import com.example.lavaturopa.dto.CatalogoDTO;
 import com.example.lavaturopa.dto.MensajeDTO;
+import com.example.lavaturopa.enums.EstadoPago;
 import com.example.lavaturopa.enums.TipoPrenda;
 import com.example.lavaturopa.enums.TipoServicio;
 import com.example.lavaturopa.modelos.Catalogo;
 import com.example.lavaturopa.repositorios.CatalogoRepositorio;
+import com.example.lavaturopa.repositorios.PagosRepositorio;
 import com.example.lavaturopa.repositorios.PrendasPedidoCatalogoRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +22,7 @@ import java.util.List;
 public class CatalogoService {
 
     private CatalogoRepositorio catalogoRepositorio;
+    private PagosRepositorio pagosRepositorio;
 
     /**
      * Este metodo obtiene todos los registo de la tabla catalogo
@@ -78,28 +82,13 @@ public class CatalogoService {
         return catalogoRepositorio.save(catalogo);
     }
 
+
     /**
-     * Este metodo elimina a un catalogo por su id
-     * @param id
+     * Este metodo elimina un catlogo teniendo en cuenta tango el estado del pedido como el estado del pago
+     * @param idCatalogo
+     * @return
      */
-    public String eliminar(Integer id){
-        String mensaje = "";
-        Catalogo catalogo = catalogoRepositorio.findById(id).orElse(null);
-        if (catalogo == null) {
-            mensaje = "El catalogo con el id indicado no existe";
-        }
-        try {
-            catalogoRepositorio.deleteById(id);
-            catalogoRepositorio.findById(id);
-            if (catalogo != null){
-                mensaje = "No se ha podido eliminar el clinete";
-            }
-            mensaje = "Catalogo eliminado con existo";
-        } catch (Exception e){
-            mensaje = "No se ha podido eliminar el clinete";
-        }
-        return mensaje;
-    }
+    @Transactional
     public MensajeDTO eliminarCatalogo(Integer idCatalogo) {
         MensajeDTO mensajeDTO = new MensajeDTO();
         Catalogo catalogo = catalogoRepositorio.findById(idCatalogo).orElse(null);
@@ -107,17 +96,23 @@ public class CatalogoService {
             mensajeDTO.setMensaje("El catalogo con el id indicado no existe. ");
         }
         boolean existeRelacion = catalogoRepositorio.existsInPrendasPedidoCatalogoAndPedidoNotEntregado(idCatalogo);
+        boolean existeRelacionpago  = pagosRepositorio.existsByCatalogoIdAndEstadoNot(idCatalogo, EstadoPago.PAGADO);
         if (existeRelacion) {
             mensajeDTO.setMensaje("No se puede eliminar el catálogo porque está asociado a un pedido que no está en estado ENTREGADO.");
             return  mensajeDTO;
+        } else if (existeRelacionpago) {
+            mensajeDTO.setMensaje("No se pude eliminar el catalogo porque el estado del pago no es PAGADO.");
+            return mensajeDTO;
         } else {
             try {
                 catalogoRepositorio.deleteById(idCatalogo);
                 mensajeDTO.setMensaje("Catalogo eliminado con existo.");
                 return mensajeDTO;
-            } catch ()
+            } catch (Exception e){
+                mensajeDTO.setMensaje("No se ha podido eliminar el catalogo.");
+                return mensajeDTO;
+            }
         }
-
     }
 
 

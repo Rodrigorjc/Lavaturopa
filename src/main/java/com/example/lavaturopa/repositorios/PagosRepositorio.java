@@ -1,5 +1,6 @@
 package com.example.lavaturopa.repositorios;
 
+import com.example.lavaturopa.enums.EstadoPago;
 import com.example.lavaturopa.modelos.Pagos;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,7 @@ public interface PagosRepositorio extends JpaRepository<Pagos, Integer> {
 
     @Query("SELECT p FROM Pagos p WHERE p.pedidos.id = :pedidoId")
     Pagos findByPedidoId(@Param("pedidoId") Integer pedidoId);
+
+    boolean existsByCatalogoIdAndEstadoNot(Integer catalogoId, EstadoPago estado);
+
 }

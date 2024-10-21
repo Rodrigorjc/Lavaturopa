@@ -22,7 +22,7 @@ public class CatalogoControler {
     private CatalogoService catalogoService;
 
     @GetMapping("/listar")
-    public List<CatalogoDTO> getAllClientes(){
+    public List<CatalogoDTO> getAllCatalogos(){
         return catalogoService.getall();
     }
 
@@ -48,8 +48,8 @@ public class CatalogoControler {
     }
 
     @DeleteMapping()
-    public String eliminar(@RequestParam Integer id){
-        return catalogoService.eliminar(id);
+    public MensajeDTO eliminar(@RequestParam Integer id){
+        return catalogoService.eliminarCatalogo(id);
     }
 
     @GetMapping("/servicioDisponible")

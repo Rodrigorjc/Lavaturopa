@@ -5,6 +5,8 @@ import com.example.lavaturopa.enums.TipoServicio;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "catalogo", schema = "lavaturopa", catalog = "postgres")
 @Getter
@@ -31,4 +33,8 @@ public class Catalogo {
 
     @Column(name = "precio", nullable = false)
     private Float precio;
+
+    @OneToMany(mappedBy = "catalogo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PrendasPedidoCatalogo> prendasPedidoCatalogos;
+
 }
