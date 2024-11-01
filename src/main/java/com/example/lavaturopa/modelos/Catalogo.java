@@ -2,6 +2,8 @@ package com.example.lavaturopa.modelos;
 
 import com.example.lavaturopa.enums.TipoPrenda;
 import com.example.lavaturopa.enums.TipoServicio;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,10 +13,11 @@ import java.util.List;
 @Table(name = "catalogo", schema = "lavaturopa", catalog = "postgres")
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"pedidos", "prendasPedidoCatalogos"})
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Catalogo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +37,7 @@ public class Catalogo {
     @Column(name = "precio", nullable = false)
     private Float precio;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "catalogo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PrendasPedidoCatalogo> prendasPedidoCatalogos;
 

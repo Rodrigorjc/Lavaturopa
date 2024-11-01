@@ -1,6 +1,7 @@
 package com.example.lavaturopa.modelos;
 
 import com.example.lavaturopa.enums.Estado;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,9 +38,11 @@ public class Pedidos {
     @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "pedidos", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pagos> pagos;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "pedidos", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PrendasPedidoCatalogo> prendasPedidoCatalogos;
 

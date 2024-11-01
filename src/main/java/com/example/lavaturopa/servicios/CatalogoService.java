@@ -92,12 +92,12 @@ public class CatalogoService {
     public MensajeDTO eliminarCatalogo(Integer idCatalogo) {
         MensajeDTO mensajeDTO = new MensajeDTO();
         Catalogo catalogo = catalogoRepositorio.findById(idCatalogo).orElse(null);
-        if (catalogo == null) {
-            mensajeDTO.setMensaje("El catalogo con el id indicado no existe. ");
-        }
         boolean existeRelacion = catalogoRepositorio.existsInPrendasPedidoCatalogoAndPedidoNotEntregado(idCatalogo);
         boolean existeRelacionpago  = pagosRepositorio.existsByCatalogoIdAndEstadoNot(idCatalogo, EstadoPago.PAGADO);
-        if (existeRelacion) {
+        if (catalogo == null) {
+            mensajeDTO.setMensaje("El catalogo con el id indicado no existe. ");
+            return mensajeDTO;
+        } else if (existeRelacion) {
             mensajeDTO.setMensaje("No se puede eliminar el catálogo porque está asociado a un pedido que no está en estado ENTREGADO.");
             return  mensajeDTO;
         } else if (existeRelacionpago) {

@@ -16,6 +16,6 @@ public interface PagosRepositorio extends JpaRepository<Pagos, Integer> {
     @Query("SELECT p FROM Pagos p WHERE p.pedidos.id = :pedidoId")
     Pagos findByPedidoId(@Param("pedidoId") Integer pedidoId);
 
-    boolean existsByCatalogoIdAndEstadoNot(Integer catalogoId, EstadoPago estado);
-
+    @Query("SELECT COUNT(p) > 0 FROM Pagos p JOIN p.pedidos ped JOIN ped.prendasPedidoCatalogos ppc WHERE ppc.catalogo.id = :catalogoId AND p.estadoPago != :estado")
+    boolean existsByCatalogoIdAndEstadoNot(@Param("catalogoId") Integer catalogoId, @Param("estado") EstadoPago estado);
 }

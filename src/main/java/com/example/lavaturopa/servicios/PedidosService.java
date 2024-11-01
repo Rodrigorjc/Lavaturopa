@@ -130,8 +130,13 @@ public class PedidosService {
      */
     public MensajeDTO gastoTotal(Integer idPedido){
         MensajeDTO mensajeDTO = new MensajeDTO();
+        Pedidos pedido = pedidosRepositorio.findById(idPedido).orElse(null);
         Float total = prendasPedidoCatalogoRepositorio.findTotalPriceByPedidoId(idPedido);
-        mensajeDTO.setMensaje("El precio total de su pedido es: "+ total + " euros.");
+        if (pedido == null) {
+            mensajeDTO.setMensaje("El pedido con el id indicado no existe.");
+        } else {
+            mensajeDTO.setMensaje("El precio total de su pedido es: "+ total + " euros.");
+        }
         return mensajeDTO;
     }
 }
