@@ -65,37 +65,39 @@ public class PagosService {
     }
 
 
-    public MensajeDTO pagarPedido(PagarPedidoDTO pagarPedidoDTO) {
+    public MensajeDTO pagarPedido(PagarPedidoDTO pagarPedidoDTO) throws Exception{
         MensajeDTO mensajeDTO = new MensajeDTO();
-        Pagos pago = pagosRepositorio.findByPedidoId(pagarPedidoDTO.getIdPedido());
-        Float totalPagar = pagosRepositorio.cantidadPagarByPedidoId(pagarPedidoDTO.getIdPedido());
-        if (totalPagar > 0 ){
-            Float pagoEfectuado = totalPagar - pagarPedidoDTO.getCantidadPago();
-            if (pagoEfectuado == 0){
-                pago.setEstadoPago(EstadoPago.PAGADO);
-                pago.setTotal((float) 0);
-                mensajeDTO.setMensaje("El pago se ha efectuado correctamente y se ha saldado completamente. Muchas gracias.");
-                pagosRepositorio.save(pago);
-                return mensajeDTO;
-            } else if (pagoEfectuado < 0 ) {
-                pago.setEstadoPago(EstadoPago.PAGADO);
-                pago.setTotal((float) 0);
-                pagoEfectuado = pagoEfectuado * -1;
-                mensajeDTO.setMensaje("Usted ha pagado mas de la cuenta. Se le devolvera: " + pagoEfectuado + " euros.");
-                pagosRepositorio.save(pago);
-                return mensajeDTO;
-            } else {
-                mensajeDTO.setMensaje("Pago realizado le quedan por pagar: " + pagoEfectuado + " euros.");
-                pago.setEstadoPago(EstadoPago.ENPROCESO);
-                pago.setTotal(totalPagar - pagoEfectuado);
-                pagosRepositorio.save(pago);
-                return mensajeDTO;
+        try {
+            Pagos pago = pagosRepositorio.findByPedidoId(pagarPedidoDTO.getIdPedido());
+            if (pago == null) {
+                throw new Exception("No se encontró el pedido con el ID proporcionado.");
             }
-        } else {
-            mensajeDTO.setMensaje("Su pago no es necesario ya que ya ha sido pagado.");
-            return  mensajeDTO;
-        }
 
+            Float totalPagar = pagosRepositorio.cantidadPagarByPedidoId(pagarPedidoDTO.getIdPedido());
+            if (totalPagar == null || totalPagar <= 0) {
+                throw new Exception("Su pago no es necesario ya que ya ha sido pagado.");
+            }
+
+            Float pagoEfectuado = totalPagar - pagarPedidoDTO.getCantidadPago();
+            if (pagoEfectuado == 0) {
+                pago.setEstadoPago(EstadoPago.PAGADO);
+                pago.setTotal(0f);
+                mensajeDTO.setMensaje("El pago se ha efectuado correctamente y se ha saldado completamente. Muchas gracias.");
+            } else if (pagoEfectuado < 0) {
+                pago.setEstadoPago(EstadoPago.PAGADO);
+                pago.setTotal(0f);
+                pagoEfectuado = -pagoEfectuado;
+                mensajeDTO.setMensaje("Usted ha pagado más de la cuenta. Se le devolverá: " + pagoEfectuado + " euros.");
+            } else {
+                pago.setEstadoPago(EstadoPago.ENPROCESO);
+                pago.setTotal(pagoEfectuado);
+                mensajeDTO.setMensaje("Pago realizado, le quedan por pagar: " + pagoEfectuado + " euros.");
+            }
+            pagosRepositorio.save(pago);
+        } catch (Exception e) {
+            throw new Exception("Ocurrió un error al procesar el pago. ");
+        }
+        return mensajeDTO;
     }
 
 }

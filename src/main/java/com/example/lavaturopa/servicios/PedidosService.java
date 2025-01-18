@@ -5,6 +5,7 @@ import com.example.lavaturopa.dto.LineaDTO;
 import com.example.lavaturopa.dto.MensajeDTO;
 import com.example.lavaturopa.dto.PedidoCrearDTO;
 import com.example.lavaturopa.dto.PedidoDTO;
+import com.example.lavaturopa.enums.Estado;
 import com.example.lavaturopa.modelos.Pedidos;
 import com.example.lavaturopa.modelos.PrendasPedidoCatalogo;
 import com.example.lavaturopa.repositorios.*;
@@ -89,16 +90,32 @@ public class PedidosService {
      * @param pedidoDTO
      * @return
      */
-    public PedidoCrearDTO save(PedidoCrearDTO pedidoDTO){
+    public PedidoCrearDTO save(PedidoCrearDTO pedidoDTO) throws Exception {
         Pedidos pedido = new Pedidos();
+        if (pedidoDTO.getTotal() < 0 ) {
+            throw new Exception("El total del pedido no puede ser negativo ni 0");
+        }
         pedido.setTotal(pedidoDTO.getTotal());
+        if (!Estado.isValid(pedidoDTO.getEstado().name())) {
+            throw new Exception("El estado no es válido.");
+        }
         pedido.setEstado(pedidoDTO.getEstado());
         //FECHA NACIMIENTO (STRING) -> LOCALTADE
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fechaEntrega = LocalDate.parse(pedidoDTO.getFechaEntrega(), formatter);
+        if (fechaEntrega.isBefore(LocalDate.now())) {
+            throw new Exception("La fecha de entrega no puede anterior a la fecha actual");
+        }
         pedido.setFechaEntrega(fechaEntrega);
 
+        if (clienteRepositorio.findById(pedidoDTO.getIdCliente()) == null) {
+            throw new Exception("El cliente no existe.");
+        }
         pedido.setCliente(clienteRepositorio.getReferenceById(pedidoDTO.getIdCliente()));
+
+        if (pedidoDTO.getLinea().isEmpty()) {
+            throw new Exception("El pedido debe tener al menos un producto.");
+        }
 
         Pedidos pedidoGuardado = pedidosRepositorio.save(pedido);
 
@@ -128,12 +145,12 @@ public class PedidosService {
      * @param idPedido
      * @return
      */
-    public MensajeDTO gastoTotal(Integer idPedido){
+    public MensajeDTO gastoTotal(Integer idPedido) throws Exception{
         MensajeDTO mensajeDTO = new MensajeDTO();
         Pedidos pedido = pedidosRepositorio.findById(idPedido).orElse(null);
         Float total = prendasPedidoCatalogoRepositorio.findTotalPriceByPedidoId(idPedido);
         if (pedido == null) {
-            mensajeDTO.setMensaje("El pedido con el id indicado no existe.");
+           throw new Exception("El pedido con el id indicado no existe.");
         } else {
             mensajeDTO.setMensaje("El precio total de su pedido es: "+ total + " euros.");
         }

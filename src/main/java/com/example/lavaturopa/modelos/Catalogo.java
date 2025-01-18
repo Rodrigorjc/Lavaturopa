@@ -10,14 +10,14 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "catalogo", schema = "lavaturopa", catalog = "postgres")
+@Table(name = "catalogo", schema = "lavaturopa"/*, catalog = "postgres"*/)
 @Getter
 @Setter
 @ToString(exclude = {"pedidos", "prendasPedidoCatalogos"})
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Catalogo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

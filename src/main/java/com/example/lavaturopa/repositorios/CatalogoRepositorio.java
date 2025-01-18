@@ -17,4 +17,7 @@ public interface CatalogoRepositorio extends JpaRepository<Catalogo, Integer> {
     @Query("SELECT COUNT(p) > 0 FROM PrendasPedidoCatalogo p WHERE p.catalogo.id = :catalogoId AND p.pedidos.estado != com.example.lavaturopa.enums.Estado.ENTREGADO")
     boolean existsInPrendasPedidoCatalogoAndPedidoNotEntregado(@Param("catalogoId") Integer catalogoId);
 
+    boolean existsByTipoPrenda(TipoPrenda tipoPrenda);
+
+    boolean existsByTipoServicio(TipoServicio tipoServicio);
 }

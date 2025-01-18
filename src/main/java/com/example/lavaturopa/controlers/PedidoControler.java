@@ -28,7 +28,7 @@ public class PedidoControler {
     }
 
     @PostMapping()
-    public PedidoCrearDTO guardar(@RequestBody PedidoCrearDTO pedidoDTO){
+    public PedidoCrearDTO guardar(@RequestBody PedidoCrearDTO pedidoDTO) throws Exception {
         return pedidosService.save(pedidoDTO);
     }
 
@@ -36,5 +36,5 @@ public class PedidoControler {
     public void eliminar(@RequestParam Integer id){ pedidosService.deleteById(id);}
 
     @GetMapping("/gasto/total")
-    public MensajeDTO gastoTotal(@RequestParam Integer idPedido) {return pedidosService.gastoTotal(idPedido); }
+    public MensajeDTO gastoTotal(@RequestParam Integer idPedido) throws Exception {return pedidosService.gastoTotal(idPedido); }
 }

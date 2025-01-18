@@ -22,7 +22,7 @@ public class CatalogoControler {
     private CatalogoService catalogoService;
 
     @GetMapping("/listar")
-    public List<CatalogoDTO> getAllCatalogos(){
+    public List<CatalogoDTO> getAllCatalogos() throws Exception {
         return catalogoService.getall();
     }
 
@@ -53,5 +53,5 @@ public class CatalogoControler {
     }
 
     @GetMapping("/servicioDisponible")
-    public MensajeDTO consultarDisponibilidad(@RequestParam TipoServicio tipoServicio, @RequestParam TipoPrenda tipoPrenda){ return catalogoService.disponibilidadServicio(tipoServicio, tipoPrenda);}
+    public MensajeDTO consultarDisponibilidad(@RequestParam TipoServicio tipoServicio, @RequestParam TipoPrenda tipoPrenda) throws Exception { return catalogoService.disponibilidadServicio(tipoServicio, tipoPrenda);}
 }

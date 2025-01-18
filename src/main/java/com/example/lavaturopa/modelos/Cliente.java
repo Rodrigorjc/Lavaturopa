@@ -7,7 +7,7 @@ import org.hibernate.mapping.Set;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "cliente", schema = "lavaturopa", catalog = "postgres")
+@Table(name = "cliente", schema = "lavaturopa"/*, catalog = "postgres"*/)
 @Getter
 @Setter
 @ToString

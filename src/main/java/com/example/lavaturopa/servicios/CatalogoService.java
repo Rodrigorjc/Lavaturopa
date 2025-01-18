@@ -28,8 +28,12 @@ public class CatalogoService {
      * Este metodo obtiene todos los registo de la tabla catalogo
      * @return
      */
-    public List<CatalogoDTO> getall(){
+    public List<CatalogoDTO> getall() throws Exception {
         List<Catalogo> catalogos = catalogoRepositorio.findAll();
+
+        if (catalogos.isEmpty()) {
+            throw new Exception("No hay registros en el catalogo");
+        }
         List<CatalogoDTO> catalogoDTOS = new ArrayList<>();
         for(Catalogo c : catalogos){
             CatalogoDTO catalogoDTO = new CatalogoDTO();
@@ -122,9 +126,21 @@ public class CatalogoService {
      * @param tipoPrenda
      * @return
      */
-    public MensajeDTO disponibilidadServicio(TipoServicio tipoServicio, TipoPrenda tipoPrenda) {
+    public MensajeDTO disponibilidadServicio(TipoServicio tipoServicio, TipoPrenda tipoPrenda) throws Exception{
         MensajeDTO mensajeDTO = new MensajeDTO();
         boolean exists = catalogoRepositorio.existsByTipoServicioAndTipoPrenda(tipoServicio, tipoPrenda);
+        boolean prendaExists = catalogoRepositorio.existsByTipoPrenda(tipoPrenda);
+        boolean servicioExists = catalogoRepositorio.existsByTipoServicio(tipoServicio);
+
+        if (tipoPrenda == null || tipoServicio == null){
+            throw new Exception("Tipo de prenda o servicio no puede ser nulo");
+        }
+        if (!prendaExists) {
+            throw new Exception("La prenda indicada no existe");
+        }
+        if (!servicioExists) {
+            throw new Exception("El servicio indicado no existe");
+        }
         if (exists) {
             mensajeDTO.setMensaje("Si está disponible dicho servicio para la prenda seleccionada.");
         } else {

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "pedidos", schema = "lavaturopa", catalog = "postgres")
+@Table(name = "pedidos", schema = "lavaturopa"/*, catalog = "postgres"*/)
 @Getter
 @Setter
 @AllArgsConstructor

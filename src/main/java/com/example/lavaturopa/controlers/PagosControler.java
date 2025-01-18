@@ -18,6 +18,6 @@ public class PagosControler {
     private PagosService pagosService;
 
     @GetMapping("/pedido")
-    public MensajeDTO pagarPedido(@RequestBody PagarPedidoDTO pagarPedidoDTO) { return pagosService.pagarPedido(pagarPedidoDTO);}
+    public MensajeDTO pagarPedido(@RequestBody PagarPedidoDTO pagarPedidoDTO) throws Exception { return pagosService.pagarPedido(pagarPedidoDTO);}
 
 }
