@@ -34,11 +34,11 @@ public class PrendasPedidoCatalogoService {
 
     /**
      * Guardar o modifica un registro en la tabla PrendasPedidoCatalogo
+     *
      * @param prendasPedidoCatalogo
-     * @return
      */
-    public PrendasPedidoCatalogo guardar(PrendasPedidoCatalogo prendasPedidoCatalogo) {
-        return prendasPedidoCatalogoRepositorio.save(prendasPedidoCatalogo);
+    public void guardar(PrendasPedidoCatalogo prendasPedidoCatalogo) {
+        prendasPedidoCatalogoRepositorio.save(prendasPedidoCatalogo);
     }
 
     /**

@@ -9,6 +9,7 @@ import com.example.lavaturopa.enums.Estado;
 import com.example.lavaturopa.modelos.Pedidos;
 import com.example.lavaturopa.modelos.PrendasPedidoCatalogo;
 import com.example.lavaturopa.repositorios.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -90,44 +91,56 @@ public class PedidosService {
      * @param pedidoDTO
      * @return
      */
-    public PedidoCrearDTO save(PedidoCrearDTO pedidoDTO) throws Exception {
+    @Transactional
+    public PedidoCrearDTO guardar(PedidoCrearDTO pedidoDTO) throws Exception {
         Pedidos pedido = new Pedidos();
-        if (pedidoDTO.getTotal() < 0 ) {
+
+        if (pedidoDTO.getTotal() < 0) {
             throw new Exception("El total del pedido no puede ser negativo ni 0");
         }
         pedido.setTotal(pedidoDTO.getTotal());
-        if (!Estado.isValid(pedidoDTO.getEstado().name())) {
+
+        if (pedidoDTO.getEstado() == null || !Estado.isValid(pedidoDTO.getEstado().name())) {
             throw new Exception("El estado no es válido.");
         }
         pedido.setEstado(pedidoDTO.getEstado());
-        //FECHA NACIMIENTO (STRING) -> LOCALTADE
+
+        // FECHA NACIMIENTO (STRING) -> LOCALDATE
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fechaEntrega = LocalDate.parse(pedidoDTO.getFechaEntrega(), formatter);
         if (fechaEntrega.isBefore(LocalDate.now())) {
-            throw new Exception("La fecha de entrega no puede anterior a la fecha actual");
+            throw new Exception("La fecha de entrega no puede ser anterior a la fecha actual");
         }
         pedido.setFechaEntrega(fechaEntrega);
 
-        if (clienteRepositorio.findById(pedidoDTO.getIdCliente()) == null) {
+        // Verificar que el cliente existe
+        if (clienteRepositorio.findById(pedidoDTO.getIdCliente()).isEmpty()) {
             throw new Exception("El cliente no existe.");
         }
         pedido.setCliente(clienteRepositorio.getReferenceById(pedidoDTO.getIdCliente()));
 
-        if (pedidoDTO.getLinea().isEmpty()) {
+        // Verificar que el pedido tenga al menos una línea
+        if (pedidoDTO.getLinea() == null || pedidoDTO.getLinea().isEmpty()) {
             throw new Exception("El pedido debe tener al menos un producto.");
         }
 
+        // Guardar el pedido
         Pedidos pedidoGuardado = pedidosRepositorio.save(pedido);
 
-        for(LineaDTO l : pedidoDTO.getLinea()){
+        // Aquí guardamos las líneas del pedido
+        for (LineaDTO l : pedidoDTO.getLinea()) {
             PrendasPedidoCatalogo linea = new PrendasPedidoCatalogo();
             linea.setCantidad(l.getCantidad());
             linea.setPedidos(pedidoGuardado);
             linea.setPrecio(l.getPrecio());
-            linea.setCatalogo(catalogoRepositorio.findById(l.getIdCatalogo()).orElse(null));
-            linea.setPrendas(prendasRepositorio.getReferenceById(l.getIdPrenda()));
+            if (l.getIdCatalogo() == null || l.getIdPrenda() == null) {
+                throw new Exception("La línea de pedido debe tener un catálogo y una prenda válidos");
+            }
+            linea.setCatalogo(catalogoRepositorio.findById(l.getIdCatalogo()).orElseThrow(() -> new Exception("Catalogo no encontrado")));
+            linea.setPrendas(prendasRepositorio.findById(l.getIdPrenda()).orElseThrow(() -> new Exception("Prenda no encontrada")));
             prendasPedidoCatalogoService.guardar(linea);
         }
+
         return pedidoDTO;
     }
 
@@ -143,9 +156,12 @@ public class PedidosService {
     /**
      * Este metodo te da el total de un pedido
      * @param idPedido
-     * @return
+     * @return MensajeDTO
      */
     public MensajeDTO gastoTotal(Integer idPedido) throws Exception{
+        if (idPedido == null) {
+            throw new Exception("El id del pedido no puede ser nulo.");
+        }
         MensajeDTO mensajeDTO = new MensajeDTO();
         Pedidos pedido = pedidosRepositorio.findById(idPedido).orElse(null);
         Float total = prendasPedidoCatalogoRepositorio.findTotalPriceByPedidoId(idPedido);

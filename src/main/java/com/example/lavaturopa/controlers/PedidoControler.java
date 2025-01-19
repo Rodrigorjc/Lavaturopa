@@ -1,9 +1,6 @@
 package com.example.lavaturopa.controlers;
 
 import com.example.lavaturopa.dto.*;
-import com.example.lavaturopa.modelos.Cliente;
-import com.example.lavaturopa.modelos.Pedidos;
-import com.example.lavaturopa.servicios.ClienteService;
 import com.example.lavaturopa.servicios.PedidosService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +26,7 @@ public class PedidoControler {
 
     @PostMapping()
     public PedidoCrearDTO guardar(@RequestBody PedidoCrearDTO pedidoDTO) throws Exception {
-        return pedidosService.save(pedidoDTO);
+        return pedidosService.guardar(pedidoDTO);
     }
 
     @DeleteMapping()

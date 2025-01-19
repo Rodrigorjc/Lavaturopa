@@ -2,26 +2,32 @@ package com.example.lavaturopa;
 
 import com.example.lavaturopa.dto.CatalogoDTO;
 import com.example.lavaturopa.dto.MensajeDTO;
+import com.example.lavaturopa.enums.Estado;
+import com.example.lavaturopa.enums.EstadoPago;
 import com.example.lavaturopa.enums.TipoPrenda;
 import com.example.lavaturopa.enums.TipoServicio;
-import com.example.lavaturopa.modelos.Catalogo;
-import com.example.lavaturopa.repositorios.CatalogoRepositorio;
+import com.example.lavaturopa.modelos.*;
+import com.example.lavaturopa.repositorios.*;
 import com.example.lavaturopa.servicios.CatalogoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
 @AutoConfigureTestDatabase
 @Transactional
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class CatalogoServiceTest {
 
     @Autowired
@@ -29,6 +35,21 @@ public class CatalogoServiceTest {
 
     @Autowired
     private CatalogoRepositorio catalogoRepositorio;
+
+    @Autowired
+    private PedidosRepositorio pedidosRepositorio;
+
+    @Autowired
+    private PrendasPedidoCatalogoRepositorio prendasPedidoCatalogoRepositorio;
+
+    @Autowired
+    private PagosRepositorio pagosRepositorio;
+
+    @Autowired
+    private ClienteRepositorio clienteRepositorio;
+
+    @Autowired
+    private PrendasRepositorio prendasRepositorio;
 
     @BeforeEach
     public void inicializarDatos() {
@@ -123,4 +144,28 @@ public class CatalogoServiceTest {
         assertEquals("El servicio indicado no existe", exception1.getMessage());
         assertEquals("Tipo de prenda o servicio no puede ser nulo", exception2.getMessage());
     }
+
+    @Test
+    public void testEliminarCatalogo_Positive() {
+        // GIVEN
+        Catalogo catalogo = catalogoRepositorio.findAll().getFirst();
+
+        // WHEN
+        MensajeDTO mensajeDTO = catalogoService.eliminarCatalogo(catalogo.getId());
+
+        // THEN
+        assertEquals("Catalogo eliminado con existo.", mensajeDTO.getMensaje());
+        assertFalse(catalogoRepositorio.existsById(catalogo.getId()));
+    }
+
+    @Test
+    public void testEliminarCatalogo_Negative_CatalogoNoExiste() {
+        // WHEN
+        MensajeDTO mensajeDTO = catalogoService.eliminarCatalogo(999);
+
+        // THEN
+        assertEquals("El catalogo con el id indicado no existe. ", mensajeDTO.getMensaje());
+    }
+
+
 }

@@ -78,7 +78,7 @@ public class PagosService {
                 throw new Exception("Su pago no es necesario ya que ya ha sido pagado.");
             }
 
-            Float pagoEfectuado = totalPagar - pagarPedidoDTO.getCantidadPago();
+            float pagoEfectuado = totalPagar - pagarPedidoDTO.getCantidadPago();
             if (pagoEfectuado == 0) {
                 pago.setEstadoPago(EstadoPago.PAGADO);
                 pago.setTotal(0f);
@@ -95,7 +95,8 @@ public class PagosService {
             }
             pagosRepositorio.save(pago);
         } catch (Exception e) {
-            throw new Exception("Ocurrió un error al procesar el pago. ");
+            mensajeDTO.setMensaje(e.getMessage());
+            throw e;
         }
         return mensajeDTO;
     }
