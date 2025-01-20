@@ -17,6 +17,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class PagosServiceIntegrationTest {
@@ -33,7 +34,7 @@ public class PagosServiceIntegrationTest {
     }
 
     @Test
-    public void testPagarPedido_Positive() throws Exception {
+    public void testPagarPedidoPositivo() throws Exception {
         // GIVEN
         PagarPedidoDTO pagarPedidoDTO = new PagarPedidoDTO();
         pagarPedidoDTO.setIdPedido(1);
@@ -54,5 +55,10 @@ public class PagosServiceIntegrationTest {
         assertEquals("El pago se ha efectuado correctamente y se ha saldado completamente. Muchas gracias.", resultado.getMensaje());
         assertEquals(EstadoPago.PAGADO, pago.getEstadoPago());
         assertEquals(0f, pago.getTotal());
+
+        // VERIFY
+        verify(pagosRepositorio).findByPedidoId(anyInt());
+        verify(pagosRepositorio).cantidadPagarByPedidoId(anyInt());
+        verify(pagosRepositorio).save(pago);
     }
 }

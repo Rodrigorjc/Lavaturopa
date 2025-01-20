@@ -25,6 +25,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -92,6 +93,12 @@ public class PedidosServiceIntegrationTest {
         assertEquals(pedidoDTO.getFechaEntrega(), result.getFechaEntrega());
         assertEquals(pedidoDTO.getIdCliente(), result.getIdCliente());
         assertEquals(pedidoDTO.getLinea().size(), result.getLinea().size());
+
+        // VERIFY
+        verify(clienteRepositorio).findById(1);
+        verify(catalogoRepositorio).findById(1);
+        verify(prendasRepositorio).findById(1);
+        verify(pedidosRepositorio).save(any());
     }
 
     @Test
@@ -107,5 +114,10 @@ public class PedidosServiceIntegrationTest {
 
         // THEN
         assertEquals("El precio total de su pedido es: 150.0 euros.", mensajeDTO.getMensaje());
+
+        // VERIFY
+        verify(pedidosRepositorio).findById(anyInt());
+        verify(prendasPedidoCatalogoRepositorio).findTotalPriceByPedidoId(anyInt());
+
     }
 }

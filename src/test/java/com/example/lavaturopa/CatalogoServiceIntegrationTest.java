@@ -72,6 +72,12 @@ public class CatalogoServiceIntegrationTest {
 
         // THEN
         assertEquals("Si está disponible dicho servicio para la prenda seleccionada.", mensajeDTO.getMensaje());
+
+        // VERIFY
+        verify(catalogoRepositorio).existsByTipoServicioAndTipoPrenda(any(TipoServicio.class), any(TipoPrenda.class));
+        verify(catalogoRepositorio).existsByTipoPrenda(any(TipoPrenda.class));
+        verify(catalogoRepositorio).existsByTipoServicio(any(TipoServicio.class));
+
     }
 
     @Test
@@ -100,15 +106,21 @@ public class CatalogoServiceIntegrationTest {
         assertEquals(TipoPrenda.CAMISA, catalogoDTOS.get(1).getTipoPrenda());
         assertEquals(TipoServicio.LAVADO, catalogoDTOS.get(1).getTipoServicio());
         assertEquals(50.0F, catalogoDTOS.get(1).getPrecio());
+
+        // VERIFY
+        verify(catalogoRepositorio).findAll();
     }
 
     @Test
-    public void testGetAll_NoRecords() {
+    public void testGetAll1() {
         // GIVEN
         when(catalogoRepositorio.findAll()).thenReturn(List.of());
 
         // WHEN & THEN
         Exception exception = assertThrows(Exception.class, () -> catalogoService.getall());
         assertEquals("No hay registros en el catalogo", exception.getMessage());
+
+        // VERIFY
+        verify(catalogoRepositorio).findAll();
     }
 }

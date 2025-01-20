@@ -146,7 +146,7 @@ public class CatalogoServiceTest {
     }
 
     @Test
-    public void testEliminarCatalogo_Positive() {
+    public void testEliminarCatalogoPositivo() {
         // GIVEN
         Catalogo catalogo = catalogoRepositorio.findAll().getFirst();
 
@@ -159,7 +159,7 @@ public class CatalogoServiceTest {
     }
 
     @Test
-    public void testEliminarCatalogo_Negative_CatalogoNoExiste() {
+    public void testEliminarCatalogo_NegativoCatalogoNoExiste() {
         // WHEN
         MensajeDTO mensajeDTO = catalogoService.eliminarCatalogo(999);
 

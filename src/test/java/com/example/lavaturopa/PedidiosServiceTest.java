@@ -210,7 +210,7 @@ public class PedidiosServiceTest {
 
         // Test con estado inválido
         pedidoDTO.setTotal(100.0F);
-        pedidoDTO.setEstado(null); // Estado inválido
+        pedidoDTO.setEstado(null);
         pedidoDTO.setFechaEntrega("2025-12-31");
         pedidoDTO.setIdCliente(1);
         exception = assertThrows(Exception.class, () -> service.guardar(pedidoDTO));
@@ -219,7 +219,7 @@ public class PedidiosServiceTest {
         // Test con fecha de entrega anterior
         pedidoDTO.setTotal(100.0F);
         pedidoDTO.setEstado(Estado.PENDIENTE);
-        pedidoDTO.setFechaEntrega("2020-01-01"); // Fecha pasada
+        pedidoDTO.setFechaEntrega("2020-01-01");
         pedidoDTO.setIdCliente(1);
         exception = assertThrows(Exception.class, () -> service.guardar(pedidoDTO));
         assertEquals("La fecha de entrega no puede ser anterior a la fecha actual", exception.getMessage());
@@ -228,7 +228,7 @@ public class PedidiosServiceTest {
         pedidoDTO.setTotal(100.0F);
         pedidoDTO.setEstado(Estado.PENDIENTE);
         pedidoDTO.setFechaEntrega("2025-12-31");
-        pedidoDTO.setIdCliente(999); // Cliente no existe
+        pedidoDTO.setIdCliente(999);
         exception = assertThrows(Exception.class, () -> service.guardar(pedidoDTO));
         assertEquals("El cliente no existe.", exception.getMessage());
 
@@ -237,7 +237,7 @@ public class PedidiosServiceTest {
         pedidoDTO.setEstado(Estado.PENDIENTE);
         pedidoDTO.setFechaEntrega("2025-12-31");
         pedidoDTO.setIdCliente(1);
-        pedidoDTO.setLinea(Collections.emptyList()); // Líneas vacías
+        pedidoDTO.setLinea(Collections.emptyList());
         exception = assertThrows(Exception.class, () -> service.guardar(pedidoDTO));
         assertEquals("El pedido debe tener al menos un producto.", exception.getMessage());
 
@@ -249,8 +249,8 @@ public class PedidiosServiceTest {
         LineaDTO lineaDTO = new LineaDTO();
         lineaDTO.setCantidad(2);
         lineaDTO.setPrecio(20.0F);
-        lineaDTO.setIdCatalogo(null); // Catálogo nulo
-        lineaDTO.setIdPrenda(null);  // Prenda nula
+        lineaDTO.setIdCatalogo(null);
+        lineaDTO.setIdPrenda(null);
         pedidoDTO.setLinea(Collections.singletonList(lineaDTO));
         exception = assertThrows(Exception.class, () -> service.guardar(pedidoDTO));
         assertEquals("La línea de pedido debe tener un catálogo y una prenda válidos", exception.getMessage());

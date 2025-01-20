@@ -109,7 +109,7 @@ public class PagosServiceTest {
     }
 
     @Test
-    public void testPagarPedido_Positive() throws Exception {
+    public void testPagarPedidoPositivo() throws Exception {
         PagarPedidoDTO pagarPedidoDTO = new PagarPedidoDTO();
         pagarPedidoDTO.setIdPedido(1);
         pagarPedidoDTO.setCantidadPago(100f);
@@ -124,9 +124,9 @@ public class PagosServiceTest {
     }
 
     @Test
-    public void testPagarPedido_Negative_NoPedidoFound() {
+    public void testPagarPedidoNegativoNoEncontrado() {
         PagarPedidoDTO pagarPedidoDTO = new PagarPedidoDTO();
-        pagarPedidoDTO.setIdPedido(999); // Non-existent ID
+        pagarPedidoDTO.setIdPedido(999);
         pagarPedidoDTO.setCantidadPago(100f);
 
         Exception exception = assertThrows(Exception.class, () -> {
@@ -137,13 +137,13 @@ public class PagosServiceTest {
     }
 
     @Test
-    public void testPagarPedido_Negative_NoPaymentNeeded() {
+    public void testPagarPedidoNegativoPagoNoNecesario() {
         PagarPedidoDTO pagarPedidoDTO = new PagarPedidoDTO();
         pagarPedidoDTO.setIdPedido(1);
         pagarPedidoDTO.setCantidadPago(100f);
 
-        // Simulate that no payment is needed
         Pagos pago = repositorio.findByPedidoId(1);
+        assertNotNull(pago, "Pago should not be null");
         pago.setTotal(0f);
         repositorio.save(pago);
 
